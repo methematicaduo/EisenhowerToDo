@@ -1,63 +1,168 @@
-# Eisenhower To-Do App
+# Eisenhower ToDo App
 
-Minimal ve modern bir Android mobil uygulama. Uygulama, Eisenhower Matrisi yöntemiyle görevleri dört kategoriye ayırıyor:
+A modern Android app implementing the Eisenhower Matrix for task management with intuitive drag-and-drop functionality.
 
-## Özellikler
+## 🎯 Features
 
-- **4 Kategori**: "Acil & Önemli", "Acil ama Önemli Değil", "Önemli ama Acele Değil", "Acil & Önemli Değil"
-- **Minimal Tasarım**: Siyah-beyaz renk paleti ile temiz ve modern arayüz
-- **Görev Yönetimi**: Görev ekleme, tamamlama ve silme
-- **Responsive Layout**: 4 eşit alan şeklinde kategoriler
-- **Floating Action Button**: Alt kısımda sabit + ikonu ile görev ekleme
+### Core Functionality
+- **Eisenhower Matrix UI**: 2x2 grid layout with four distinct quadrants
+- **Task Management**: Add, edit, complete, and delete tasks
+- **Drag & Drop**: Move tasks between quadrants with smooth animations
+- **Visual Feedback**: Quadrants highlight when hovering during drag operations
 
-## Teknik Detaylar
+### Quadrants
+1. **Top-left**: "Urgent & Important" (Red theme) - Do these first!
+2. **Top-right**: "Urgent & Not Important" (Blue theme) - Delegate if possible
+3. **Bottom-left**: "Not Urgent & Important" (Yellow theme) - Schedule for later
+4. **Bottom-right**: "Not Urgent & Not Important" (Green theme) - Consider eliminating
 
-- **Framework**: Jetpack Compose
-- **Mimari**: MVVM (Model-View-ViewModel)
-- **Dil**: Kotlin
-- **Min SDK**: 24 (Android 7.0)
-- **Target SDK**: 34 (Android 14)
+### Drag & Drop System
+- **Long press** any task to start dragging
+- **Smooth following**: Task follows your finger naturally
+- **Visual feedback**: Target quadrants highlight during drag
+- **Precise positioning**: Task appears centered on your touch point
+- **Intuitive drop**: Release to move task to highlighted quadrant
 
-## Kurulum
+## 🏗️ Architecture
 
-1. Android Studio'yu açın
-2. Projeyi import edin
-3. Gradle sync işlemini tamamlayın
-4. Uygulamayı çalıştırın
+### MVVM Pattern
+- **ViewModel**: `TaskViewModel` manages business logic and state
+- **Model**: `Task` data class with `TaskCategory` enum
+- **View**: Jetpack Compose UI components
 
-### Java Sürümü Sorunu
+### Key Components
+- `MainActivity`: Main UI and drag state management
+- `CategoryCard`: Individual quadrant display
+- `DraggableTaskItem`: Task item with drag detection
+- `DragOverlay`: Global overlay for dragged items
+- `AddTaskDialog`: Task creation interface
+- `ColorUtils`: Shared color management
 
-Eğer "No Java compiler found" hatası alırsanız:
+### File Structure
+```
+app/src/main/java/com/example/eisenhowertodo/
+├── MainActivity.kt                 # Main UI and drag coordination
+├── model/
+│   └── Task.kt                    # Data models
+├── viewmodel/
+│   └── TaskViewModel.kt           # Business logic
+├── ui/
+│   ├── components/
+│   │   ├── CategoryCard.kt        # Quadrant display
+│   │   ├── DraggableTaskItem.kt   # Task item with drag
+│   │   ├── DragOverlay.kt         # Drag visual feedback
+│   │   └── AddTaskDialog.kt       # Task creation
+│   ├── theme/
+│   │   ├── Color.kt               # Color definitions
+│   │   ├── Theme.kt               # Material 3 theme
+│   │   └── Type.kt                # Typography
+│   └── utils/
+│       └── ColorUtils.kt          # Shared color functions
+```
 
-1. Android Studio'da **File > Project Structure** açın
-2. **SDK Location** sekmesine gidin
-3. **JDK Location** için Android Studio'nun embedded JDK'sını seçin (genellikle `/Applications/Android Studio.app/Contents/jbr/Contents/Home`)
-4. **Apply** ve **OK** butonlarına tıklayın
-5. Projeyi yeniden sync edin
+## 🎨 Design
 
-Alternatif olarak, sisteminizde Java 11 veya üzeri yüklüyse, `JAVA_HOME` environment variable'ını ayarlayabilirsiniz.
+### Material Design 3
+- Modern Material Design 3 components
+- Consistent color theming across quadrants
+- Smooth animations and transitions
+- Accessible touch targets
 
-## Kullanım
+### Color Scheme
+- **Urgent & Important**: Red (#E53E3E)
+- **Urgent & Not Important**: Blue (#3182CE)
+- **Not Urgent & Important**: Yellow (#D69E2E)
+- **Not Urgent & Not Important**: Green (#38A169)
 
-1. Ana ekranda 4 kategori kartını göreceksiniz
-2. Alt kısımdaki + butonuna tıklayarak yeni görev ekleyin
-3. Görevleri kategorilere göre organize edin
-4. Görevleri tamamlamak için checkbox'a tıklayın
-5. Görevleri silmek için X butonuna tıklayın
+## 🚀 Getting Started
 
-## Tasarım Prensipleri
+### Prerequisites
+- Android Studio Hedgehog or later
+- Android SDK 24+
+- Kotlin 1.9+
 
-- **Minimalizm**: Gereksiz süslemeler yok
-- **Fonksiyonellik**: Sadece gerekli özellikler
-- **Okunabilirlik**: Modern tipografi
-- **Kontrast**: Siyah-beyaz renk paleti
-- **Temizlik**: Düzenli ve organize arayüz
+### Installation
+1. Clone the repository
+2. Open in Android Studio
+3. Sync Gradle files
+4. Run on device or emulator
 
-## Geliştirici Notları
+### Building
+```bash
+./gradlew assembleDebug
+```
 
-Uygulama Jetpack Compose ile geliştirilmiştir ve modern Android geliştirme pratiklerini takip eder. Kod yapısı:
+## 🎮 Usage
 
-- `model/`: Veri modelleri (Task, TaskCategory)
-- `viewmodel/`: İş mantığı (TaskViewModel)
-- `ui/components/`: UI bileşenleri (CategoryCard, AddTaskDialog)
-- `ui/theme/`: Tema ve renkler
+### Adding Tasks
+1. Tap the floating action button (+)
+2. Enter task title and description
+3. Select appropriate category
+4. Tap "Add Task"
+
+### Managing Tasks
+- **Complete**: Tap the checkbox
+- **Delete**: Tap the trash icon
+- **Move**: Long press and drag to another quadrant
+
+### Drag & Drop
+1. **Long press** any task to start dragging
+2. **Drag** to desired quadrant (it will highlight)
+3. **Release** to move the task
+
+## 🔧 Technical Details
+
+### Drag Implementation
+- Uses `detectDragGestures` for touch handling
+- Global state management in `MainActivity`
+- Separate drag detector to avoid button conflicts
+- Precise offset calculation for natural positioning
+
+### State Management
+- `StateFlow` for reactive UI updates
+- Local state for drag operations
+- Proper cleanup on drag end
+
+### Performance
+- Efficient LazyColumn for task lists
+- Minimal recomposition during drag
+- Smooth 60fps animations
+
+## 🐛 Troubleshooting
+
+### Common Issues
+- **Drag not working**: Ensure long press, not tap
+- **Task appears in wrong position**: Check screen dimensions in drag calculation
+- **Buttons not responding**: Drag detector is separate from button interactions
+
+### Debug Features
+- Console logging for drag coordinates
+- Visual feedback for drag states
+- Highlighted drop targets
+
+## 📱 Screenshots
+
+The app features a clean 2x2 matrix layout with:
+- Color-coded quadrants
+- Smooth drag animations
+- Intuitive task management
+- Modern Material Design
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
+
+## 📄 License
+
+This project is open source and available under the MIT License.
+
+## 🙏 Acknowledgments
+
+- Eisenhower Matrix methodology
+- Material Design 3 guidelines
+- Jetpack Compose framework
+- Android development community

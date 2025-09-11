@@ -12,87 +12,56 @@ import kotlinx.coroutines.launch
 class TaskViewModel : ViewModel() {
     private val _tasks = MutableStateFlow<List<Task>>(
         listOf(
-            // 🔴 Urgent & Important (Do it now)
             Task(
-                title = "Prepare presentation",
-                description = "Finish slides for tomorrow's meeting",
+                title = "Fix critical bug",
+                description = "App crashes on startup",
                 category = TaskCategory.URGENT_IMPORTANT
             ),
             Task(
-                title = "Submit urgent report",
-                description = "Sent yesterday's deadline report",
-                category = TaskCategory.URGENT_IMPORTANT,
-                isCompleted = true
-            ),
-            
-            // 🔵 Urgent & Unimportant (Delegate if possible)
-            Task(
-                title = "Make phone call",
-                description = "Confirm delivery with courier",
+                title = "Call client back",
+                description = "Return phone call",
                 category = TaskCategory.URGENT_NOT_IMPORTANT
             ),
             Task(
-                title = "Clean inbox",
-                description = "Sorted and archived all emails",
-                category = TaskCategory.URGENT_NOT_IMPORTANT,
-                isCompleted = true
-            ),
-            
-            // 🟡 Not Urgent & Important (Plan and schedule)
-            Task(
-                title = "Learn a new skill",
-                description = "Start online course",
+                title = "Plan vacation",
+                description = "Research destinations",
                 category = TaskCategory.NOT_URGENT_IMPORTANT
             ),
             Task(
-                title = "Finish book",
-                description = "Completed last month's reading",
-                category = TaskCategory.NOT_URGENT_IMPORTANT,
-                isCompleted = true
-            ),
-            
-            // 🟢 Not Urgent & Unimportant (Eliminate or limit)
-            Task(
-                title = "Play a game",
-                description = "Try out the new console game",
+                title = "Check social media",
+                description = "Browse Facebook",
                 category = TaskCategory.NOT_URGENT_NOT_IMPORTANT
             ),
             Task(
-                title = "Watch a movie",
-                description = "Completed last weekend's film",
-                category = TaskCategory.NOT_URGENT_NOT_IMPORTANT,
-                isCompleted = true
+                title = "Deadline project",
+                description = "Due tomorrow",
+                category = TaskCategory.URGENT_IMPORTANT
+            ),
+            Task(
+                title = "Organize desk",
+                description = "Clean workspace",
+                category = TaskCategory.NOT_URGENT_NOT_IMPORTANT
             )
         )
     )
     val tasks: StateFlow<List<Task>> = _tasks.asStateFlow()
 
-    private val _showAddTaskDialog = MutableStateFlow(false)
-    val showAddTaskDialog: StateFlow<Boolean> = _showAddTaskDialog.asStateFlow()
-
-    private val _focusedCategory = MutableStateFlow<TaskCategory?>(null)
-    val focusedCategory: StateFlow<TaskCategory?> = _focusedCategory.asStateFlow()
-
     fun addTask(title: String, description: String, category: TaskCategory) {
-        if (title.isNotBlank()) {
-            val newTask = Task(
-                title = title.trim(),
-                description = description.trim(),
-                category = category
-            )
-            _tasks.value = _tasks.value + newTask
-        }
+        val newTask = Task(
+            title = title,
+            description = description,
+            category = category
+        )
+        _tasks.value = _tasks.value + newTask
     }
 
     fun toggleTaskCompletion(taskId: String) {
-        val currentTasks = _tasks.value.toMutableList()
-        val taskIndex = currentTasks.indexOfFirst { it.id == taskId }
-        
-        if (taskIndex != -1) {
-            val task = currentTasks[taskIndex]
-            val updatedTask = task.copy(isCompleted = !task.isCompleted)
-            currentTasks[taskIndex] = updatedTask
-            _tasks.value = currentTasks
+        _tasks.value = _tasks.value.map { task ->
+            if (task.id == taskId) {
+                task.copy(isCompleted = !task.isCompleted)
+            } else {
+                task
+            }
         }
     }
 
@@ -100,25 +69,17 @@ class TaskViewModel : ViewModel() {
         _tasks.value = _tasks.value.filter { it.id != taskId }
     }
 
-    fun showAddTaskDialog() {
-        _showAddTaskDialog.value = true
-    }
-
-    fun hideAddTaskDialog() {
-        _showAddTaskDialog.value = false
+    fun moveTask(taskId: String, newCategory: TaskCategory) {
+        _tasks.value = _tasks.value.map { task ->
+            if (task.id == taskId) {
+                task.copy(category = newCategory)
+            } else {
+                task
+            }
+        }
     }
 
     fun getTasksByCategory(category: TaskCategory): List<Task> {
-        val categoryTasks = _tasks.value.filter { it.category == category }
-        // Sort tasks: incomplete first, then completed
-        return categoryTasks.sortedWith(compareBy<Task> { it.isCompleted })
-    }
-
-    fun focusOnCategory(category: TaskCategory) {
-        _focusedCategory.value = category
-    }
-
-    fun exitFocusMode() {
-        _focusedCategory.value = null
+        return _tasks.value.filter { it.category == category }
     }
 }
